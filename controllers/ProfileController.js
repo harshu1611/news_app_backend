@@ -9,6 +9,7 @@ export const getUser=async(req,res)=>{
 export const updateProfile=async(req,res)=>{
     try {
         const {id}= req.params
+        const user= req.user;
 
     if(!req.files){
         return res.status(400).json({message:"No file uploaded"})  
@@ -28,7 +29,7 @@ export const updateProfile=async(req,res)=>{
             return res.status(500).json({message:"Failed to upload image"})
         }
 
-        await prisma.users.update({
+       const data= await prisma.users.update({
             where:{
                 id:Number(id)
             },
@@ -36,10 +37,13 @@ export const updateProfile=async(req,res)=>{
                 profile:imageName
             }
         })
+        return res.status(200).json({
+            message:"Profile image updated successfully",
+            data
+        })
     })
-    return res.status(200).json({
-        message:"Profile image updated successfully",
-    })
+   
+   
     } catch (error) {
         return res.status(500).json({message:"Internal server error"})
     }
