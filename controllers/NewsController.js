@@ -1,4 +1,5 @@
 import prisma from "../DB/db.config.js";
+import { redisCache } from "../DB/redis.config.js";
 import { generateUUID } from "../utils/generateUid.js";
 import path from "path";
 export const createNews = async (req, res) => {
@@ -30,7 +31,11 @@ export const createNews = async (req, res) => {
         .status(400)
         .json({ message: "Title and content are required" });
     }
-
+    redisCache.del("/api/news",(err)=>{
+        if(err){
+            throw new Error(err)
+        }
+    })
     const news = await prisma.news.create({
       data: payload,
     });
