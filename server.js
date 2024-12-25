@@ -5,7 +5,7 @@ import fileUpload from "express-fileupload"
 import helmet from "helmet"
 import cors from "cors"
 import { rateLimiter } from "./utils/ratelimiter.js"
-
+import "./utils/index.js"
 const app= express()
 
 const PORT= process.env.PORT || 8000

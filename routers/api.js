@@ -13,7 +13,7 @@ router.post("/auth/login", login)
 router.get("/profile",authMiddleware,getUser)
 router.put("/profile/:id",authMiddleware,updateProfile)
 
-router.get("/news", redisCache.route({expire:60*30}), getNews)
+router.get("/news", redisCache.route(), getNews)
 router.get("/news/:id",getNewsById)
 
 router.post("/news",authMiddleware,createNews)

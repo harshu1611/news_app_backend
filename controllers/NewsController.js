@@ -2,6 +2,7 @@ import prisma from "../DB/db.config.js";
 import  redisCache  from "../DB/redis.config.js";
 import { generateUUID } from "../utils/generateUid.js";
 import path from "path";
+import { createNewsQueue, queueHandler } from "../utils/queue.js";
 export const createNews = async (req, res) => {
   try {
     const user = req.user;
@@ -36,11 +37,13 @@ export const createNews = async (req, res) => {
             throw new Error(err)
         }
     })
-    const news = await prisma.news.create({
-      data: payload,
-    });
+    // const news = await prisma.news.create({
+    //   data: payload,
+    // });
 
-    return res.status(201).json({ message: "News created", data: news });
+    const news= await createNewsQueue.add("createNewsQueue",payload)
+
+    return res.status(201).json({ message: "News created", data: news.data });
   } catch (error) {
     console.log(error);
     return res
@@ -52,21 +55,22 @@ export const createNews = async (req, res) => {
 export const getNews=async(req,res)=>{
     try {
         const page= req.query.page || 1;
-        const limit= req.query.limit || 10;
+        const pageLimit= Number(req.query.pageLimit) || 10;
+        console.log(pageLimit, typeof(pageLimit))
     
         if(page<=0){
             page=1;
         }
     
-        if(limit<=0 || limit>100){
-            limit=10;
+        if(pageLimit<=0 || pageLimit>100){
+            pageLimit=10;
         }
     
-        const skip= (page-1)*limit;
+        const skip= (page-1)*pageLimit;
     
         const news= await prisma.news.findMany({
             skip:skip,
-            take:limit,
+            take:pageLimit,
             include:{
                 user:{
                     select:{
