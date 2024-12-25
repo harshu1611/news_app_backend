@@ -1,5 +1,5 @@
 import prisma from "../DB/db.config.js";
-import { redisCache } from "../DB/redis.config.js";
+import  redisCache  from "../DB/redis.config.js";
 import { generateUUID } from "../utils/generateUid.js";
 import path from "path";
 export const createNews = async (req, res) => {

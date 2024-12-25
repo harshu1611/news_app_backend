@@ -3,7 +3,7 @@ import { login, register } from "../controllers/AuthController.js";
 import { authMiddleware } from "../middlewares/AuthMiddleware.js";
 import { getUser, updateProfile } from "../controllers/ProfileController.js";
 import { createNews, getNews, getNewsById } from "../controllers/NewsController.js";
-import { redisCache } from "../DB/redis.config.js";
+import  redisCache  from "../DB/redis.config.js";
 
 const router= Router();
 
